@@ -21,12 +21,15 @@
 		"fs-extra": "^11.1.1",
 		"langchain": "^0.0.119",
 		"openai": "^3.3.0",
+		"shelljs": "^0.8.5",
 		"whisper-node": "^0.2.12"
 	},
 	"devDependencies": {
 		"@types/dotenv": "^8.2.0",
+		"@types/fluent-ffmpeg": "^2.1.21",
 		"@types/fs-extra": "^11.0.1",
 		"@types/node": "^20.4.4",
+		"@types/shelljs": "^0.8.12",
 		"prettier": "^3.0.0",
 		"ts-node": "^10.8.2",
 		"typescript": "^5.1.6"
