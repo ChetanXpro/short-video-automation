@@ -1,2 +1,2 @@
 
-# content-gpt
+# content-automation
