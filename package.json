@@ -19,10 +19,10 @@
 		"dotenv": "^16.3.1",
 		"fluent-ffmpeg": "^2.1.2",
 		"fs-extra": "^11.1.1",
-		"langchain": "^0.0.120",
+		"langchain": "0.0.120",
+		"nodejs-whisper": "0.0.8",
 		"openai": "^3.3.0",
-		"shelljs": "^0.8.5",
-		"whisper-node": "^0.2.12"
+		"shelljs": "^0.8.5"
 	},
 	"devDependencies": {
 		"@types/dotenv": "^8.2.0",
