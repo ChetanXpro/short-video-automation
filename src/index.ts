@@ -13,11 +13,11 @@ const outputFilePath = path.join(__dirname, '..', 'basicaudio.wav')
 
 const videoFilePath = path.join(__dirname, '..', 'new.mp4')
 
-const outputVideoFilePath = path.join(__dirname, '..', 'ytshort.mp4')
+const outputVideoFilePath = path.join(__dirname, '..', 'shorts', 'ytshort.mp4')
 
 const generateYoutubeShort = async () => {
 	try {
-		const script = await createShortScript({ language: 'english', topic: 'historical fact' })
+		const script = await createShortScript({ language: 'english', topic: 'world war fact' })
 		console.log('SCRIPT GENERATED: ', script)
 
 		if (!script) throw new Error('Script not generated')
@@ -30,12 +30,13 @@ const generateYoutubeShort = async () => {
 
 		await whisper(outputFilePath)
 
-		console.log('TRANSCRIPT GENERATED')
+		console.log('MERGING AUDIO AND VIDEO')
 
-		await whisper(outputFilePath)
-		console.log('MERGING AUDIO...')
-
-		mergeAudio({ videoFilePath, audioFilePath: outputFilePath, outputVideoPath: outputVideoFilePath })
+		await mergeAudio({
+			videoFilePath,
+			audioFilePath: outputFilePath,
+			outputVideoPath: outputVideoFilePath,
+		})
 	} catch (error) {
 		console.log('Error in createShortScript: ', error)
 	}

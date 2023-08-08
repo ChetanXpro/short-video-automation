@@ -3,7 +3,6 @@ import { nodewhisper } from 'nodejs-whisper'
 
 export const whisper = async (filePath: string, options?: any) => {
 	try {
-		console.log('Transcribing', filePath)
 		const transcript = await nodewhisper(filePath, {
 			modelName: 'tiny.en',
 			whisperOptions: {
