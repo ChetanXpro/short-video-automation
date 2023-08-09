@@ -5,10 +5,11 @@ export const whisper = async (filePath: string, options?: any) => {
 	try {
 		const transcript = await nodewhisper(filePath, {
 			modelName: 'tiny.en',
+			autoDownloadModelName: 'tiny.en',
 			whisperOptions: {
 				outputInSrt: true, // get output result in srt file
 
-				timestamps_length: 20, // amount of dialogue per timestamp pair
+				timestamps_length: 10, // amount of dialogue per timestamp pair
 				splitOnWord: true, //split on word rather than on token
 			},
 		})

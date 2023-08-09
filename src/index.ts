@@ -4,9 +4,13 @@ import { createShortScript } from './audio/videoScript'
 import { convertToWav, createAudio } from './audio/elevenAudio'
 import { whisper } from './transcript/transcribe'
 
+import express from 'express'
+const app = express()
 import path from 'path'
+
 import { mergeAudio } from './video/video'
 
+import { uploadVideos } from './upoadYt/upload'
 const inputFilePath = path.join(__dirname, '..', 'basicaudio.mp3')
 
 const outputFilePath = path.join(__dirname, '..', 'basicaudio.wav')
@@ -37,6 +41,8 @@ const generateYoutubeShort = async () => {
 			audioFilePath: outputFilePath,
 			outputVideoPath: outputVideoFilePath,
 		})
+
+		uploadVideos('facts', 'facts', ['#facts', '#trending', '#shorts'], outputVideoFilePath)
 	} catch (error) {
 		console.log('Error in createShortScript: ', error)
 	}

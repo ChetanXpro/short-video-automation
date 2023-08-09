@@ -48,21 +48,36 @@ export const mergeAudio = async ({
 	const audioFilter = `atempo=${audioSpeed},aformat=sample_rates=44100:channel_layouts=stereo`
 	const srtFilePath = 'basicaudio.wav.srt'
 	const newSrtFilePath = path.join(__dirname, '..', '..', srtFilePath)
+	const subtitleStyle = "force_style='FontName=DejaVu,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&'"
 
 	// Merge the audio with the video
-	ffmpeg(videoFilePath)
-		.inputOptions(`-t ${adjustedTrimDuration}`)
-		.input(audioFilePath)
 
-		.videoFilter(videoFilter)
-		.audioFilter(audioFilter)
-		.outputOptions(['-vf', `subtitles=${newSrtFilePath}`, '-map', '0:v', '-map', '1:a', '-c:v libx264', '-c:a aac'])
-		.output(outputVideoPath)
-		.on('end', () => {
-			console.log('Audio added to video complete!')
-		})
-		.on('error', err => {
-			console.error('Error during audio adding to video:', err.message)
-		})
-		.run()
+	return new Promise((resolve, reject) => {
+		ffmpeg(videoFilePath)
+			.inputOptions(`-t ${adjustedTrimDuration}`)
+			.input(audioFilePath)
+
+			.videoFilter(videoFilter)
+			.audioFilter(audioFilter)
+			.outputOptions([
+				'-vf',
+				`subtitles=${newSrtFilePath}:${subtitleStyle}`,
+				'-map',
+				'0:v',
+				'-map',
+				'1:a',
+				'-c:v libx264',
+				'-c:a aac',
+			])
+			.output(outputVideoPath)
+			.on('end', () => {
+				console.log('Audio added to video complete!')
+				resolve('Audio added to video complete!')
+			})
+			.on('error', err => {
+				console.error('Error during audio adding to video:', err.message)
+				reject(err)
+			})
+			.run()
+	})
 }
