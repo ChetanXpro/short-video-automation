@@ -1,6 +1,13 @@
 import ffmpeg from 'fluent-ffmpeg'
 import fs from 'fs'
 import path from 'path'
+import ffmpegPath from 'ffmpeg-static'
+import ffmpegProb from 'ffprobe-static'
+
+if (ffmpegPath) {
+	ffmpeg.setFfprobePath(ffmpegProb.path)
+	ffmpeg.setFfmpegPath(ffmpegPath)
+}
 
 export const mergeAudio = async ({
 	videoFilePath,
@@ -48,7 +55,8 @@ export const mergeAudio = async ({
 	const audioFilter = `atempo=${audioSpeed},aformat=sample_rates=44100:channel_layouts=stereo`
 	const srtFilePath = 'basicaudio.wav.srt'
 	const newSrtFilePath = path.join(__dirname, '..', '..', srtFilePath)
-	const subtitleStyle = "force_style='FontName=DejaVu,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&'"
+	const subtitleStyle =
+		"force_style='Alignment=6,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
 
 	// Merge the audio with the video
 
@@ -68,8 +76,12 @@ export const mergeAudio = async ({
 				'1:a',
 				'-c:v libx264',
 				'-c:a aac',
+				// '-apad',
 			])
 			.output(outputVideoPath)
+			.on('start', commandLine => {
+				console.log('Spawned Ffmpeg with command: ' + commandLine)
+			})
 			.on('end', () => {
 				console.log('Audio added to video complete!')
 				resolve('Audio added to video complete!')

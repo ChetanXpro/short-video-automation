@@ -3,8 +3,6 @@ import fs from 'fs-extra'
 import ffmpeg from 'fluent-ffmpeg'
 const ELEVEN_LAB_API = process.env.ELEVEN_LAB_API
 
-console.log('ELEVEN_LAB_API: ', ELEVEN_LAB_API)
-
 if (!ELEVEN_LAB_API) throw new Error('ELEVEN_LAB_API not found')
 const elevenLabsAPI = 'https://api.elevenlabs.io/v1'
 export const createAudio = async ({
