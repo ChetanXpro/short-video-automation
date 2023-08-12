@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import ffmpegPath from 'ffmpeg-static'
 import ffmpegProb from 'ffprobe-static'
+import { exec } from 'child_process'
 
 if (ffmpegPath) {
 	ffmpeg.setFfprobePath(ffmpegProb.path)
@@ -40,6 +41,7 @@ export const mergeAudio = async ({
 
 	// console.log('videodata: ', videodata)
 	// console.log('audiodata: ', audiodata)
+	// const backgroundMusicFilePath = path.join(__dirname, '..', '..', 'bg.mp3')
 
 	const videoDurationInSeconds = videodata.format.duration
 
@@ -55,10 +57,13 @@ export const mergeAudio = async ({
 	const audioFilter = `atempo=${audioSpeed},aformat=sample_rates=44100:channel_layouts=stereo`
 	const srtFilePath = 'basicaudio.wav.srt'
 	const newSrtFilePath = path.join(__dirname, '..', '..', srtFilePath)
+	const backgroundMusicFilePath = path.join(__dirname, '..', '..', 'bg.mp3')
+
+	const out = path.join(__dirname, '..', '..', 'tryyyyyyyyy.mp3')
 	const subtitleStyle =
 		"force_style='Alignment=6,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
 
-	// Merge the audio with the video
+	const backgroundAudiocommand = `${ffmpegPath} -i ${outputVideoPath} -i ${backgroundMusicFilePath} -filter_complex "[0:a]volume=1[a1];[1:a]volume=0.2[b1];[a1][b1]amix=inputs=2[aout]" -map 0:v -map "[aout]" -c:v copy -c:a aac -shortest ${out}`
 
 	return new Promise((resolve, reject) => {
 		ffmpeg(videoFilePath)
@@ -67,15 +72,17 @@ export const mergeAudio = async ({
 
 			.videoFilter(videoFilter)
 			.audioFilter(audioFilter)
+			.input(backgroundMusicFilePath)
+
 			.outputOptions([
-				'-vf',
-				`subtitles=${newSrtFilePath}:${subtitleStyle}`,
 				'-map',
 				'0:v',
 				'-map',
 				'1:a',
 				'-c:v libx264',
 				'-c:a aac',
+				'-vf',
+				`subtitles=${newSrtFilePath}:${subtitleStyle}`,
 				// '-apad',
 			])
 			.output(outputVideoPath)
@@ -84,7 +91,15 @@ export const mergeAudio = async ({
 			})
 			.on('end', () => {
 				console.log('Audio added to video complete!')
-				resolve('Audio added to video complete!')
+
+				exec(backgroundAudiocommand, (error, stdout, stderr) => {
+					if (error) {
+						console.error('Error:', error)
+						return
+					}
+					console.log('stdout:', stdout)
+					console.error('stderr:', stderr)
+				})
 			})
 			.on('error', err => {
 				console.error('Error during audio adding to video:', err.message)
