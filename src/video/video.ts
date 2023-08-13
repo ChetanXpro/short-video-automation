@@ -59,11 +59,11 @@ export const mergeAudio = async ({
 	const newSrtFilePath = path.join(__dirname, '..', '..', srtFilePath)
 	const backgroundMusicFilePath = path.join(__dirname, '..', '..', 'bg.mp3')
 
-	const out = path.join(__dirname, '..', '..', 'tryyyyyyyyy.mp3')
+	const out = path.join(__dirname, '..', '..', 'tryyyyyyyyy.mp4')
 	const subtitleStyle =
 		"force_style='Alignment=6,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
 
-	const backgroundAudiocommand = `${ffmpegPath} -i ${outputVideoPath} -i ${backgroundMusicFilePath} -filter_complex "[0:a]volume=1[a1];[1:a]volume=0.2[b1];[a1][b1]amix=inputs=2[aout]" -map 0:v -map "[aout]" -c:v copy -c:a aac -shortest ${out}`
+	const backgroundAudiocommand = `${ffmpegPath} -i ${outputVideoPath} -i ${backgroundMusicFilePath} -filter_complex "[0:a]volume=1[a1];[1:a]volume=0.4[b1];[a1][b1]amix=inputs=2[aout]" -map 0:v -map "[aout]" -c:v copy -c:a aac -shortest ${out}`
 
 	return new Promise((resolve, reject) => {
 		ffmpeg(videoFilePath)

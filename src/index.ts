@@ -12,6 +12,7 @@ import { mergeAudio } from './video/video'
 
 import { uploadVideos } from './upoad/upload'
 import uploadFile from './upoad/azureUpload'
+import { imageProccessing } from './images/imagesProccessing'
 const inputFilePath = path.join(__dirname, '..', 'basicaudio.mp3')
 
 const outputFilePath = path.join(__dirname, '..', 'basicaudio.wav')
@@ -59,12 +60,7 @@ const generateYoutubeShort = async (language: string, topic: string) => {
 
 // app.use(express.json())
 
-mergeAudio({
-	videoFilePath,
-	audioFilePath: outputFilePath,
-	outputVideoPath: outputVideoFilePath,
-})
-
+imageProccessing({ language: '' })
 // app.post('/generate', async (req, res) => {
 // 	try {
 // 		const { language, topic } = req.body
