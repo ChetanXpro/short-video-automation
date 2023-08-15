@@ -32,10 +32,12 @@ export const tryy = (
 	timestamp: string
 ) => `this is a timestamp for my video , i am using a api to fetch images , so based on this given timetamp you have to give me 5 best query by which  i can fetch images also you have to send on what time i have to show that image , 
 Time is in formet of hh:mm:ss,ms --> hh:mm:ss,ms , so you only have to return seconds part of timestamp , for example if timestamp is 00:00:10,000 --> 00:00:15,000 , you only have to return 10 -> 15 , so i can show image between 10 to 15 seconds of video
-
+Make sure that you only return good querys , so that it will be easy to find image for that
 specifications delimited by angle brackets .
 TIMESTAMP: <${timestamp}>
 
 
 ### OUTPUT 
+You will output in parsable JSON object , all these json will be in a array.
+make sure to return only seconds in timestamp like 5 -> 10 ,24 -> 30 etc
 [{"Query":"...","timestamp":".. -> .."}]`

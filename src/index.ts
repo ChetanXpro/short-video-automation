@@ -13,6 +13,8 @@ import { mergeAudio } from './video/video'
 import { uploadVideos } from './upoad/upload'
 import uploadFile from './upoad/azureUpload'
 import { imageProccessing } from './images/imagesProccessing'
+import { downloadImages } from './images/downloadImages'
+import { getImageQuerys } from './Editing/getImageQuerys'
 const inputFilePath = path.join(__dirname, '..', 'basicaudio.mp3')
 
 const outputFilePath = path.join(__dirname, '..', 'basicaudio.wav')
@@ -23,27 +25,36 @@ const outputVideoFilePath = path.join(__dirname, '..', 'shorts', 'ytshort.mp4')
 
 const generateYoutubeShort = async (language: string, topic: string) => {
 	try {
-		const script = await createShortScript({ language: language, topic: topic })
+		// const script = await createShortScript({ language: language, topic: topic })
 
-		console.log('SCRIPT GENERATED: ', script)
+		// console.log('SCRIPT GENERATED: ', script)
 
-		if (!script) throw new Error('Script not generated')
+		// if (!script) throw new Error('Script not generated')
 
-		await createAudio({ script, language, outputFilePath: inputFilePath })
+		// await createAudio({ script, language, outputFilePath: inputFilePath })
 
-		console.log('AUDIO GENERATED SUCCESSFULLY', 'basicaudio.mp3')
+		// console.log('AUDIO GENERATED SUCCESSFULLY', 'basicaudio.mp3')
 
-		await convertToWav(inputFilePath, outputFilePath)
+		// await convertToWav(inputFilePath, outputFilePath)
 
-		await whisper(outputFilePath)
+		// await whisper(outputFilePath)
 
-		console.log('MERGING AUDIO AND VIDEO')
+		// console.log('MERGING AUDIO AND VIDEO')
 
-		await mergeAudio({
-			videoFilePath,
-			audioFilePath: outputFilePath,
-			outputVideoPath: outputVideoFilePath,
-		})
+		// await mergeAudio({
+		// 	videoFilePath,
+		// 	audioFilePath: outputFilePath,
+		// 	outputVideoPath: outputVideoFilePath,
+		// })
+
+		const queries = await getImageQuerys()
+
+		console.log('QUERIES: ', queries)
+
+		await downloadImages(queries)
+
+		await imageProccessing({ language: '', queries })
+
 		return
 		// uploadVideos('facts', 'facts', ['#facts', '#trending', '#shorts'], outputVideoFilePath)
 		uploadFile('videos', Math.random() + 'new.mp4', outputVideoFilePath).catch(console.error)
@@ -60,7 +71,26 @@ const generateYoutubeShort = async (language: string, topic: string) => {
 
 // app.use(express.json())
 
-imageProccessing({ language: '' })
+generateYoutubeShort('english', 'indian fact')
+
+const queries = [
+	{ Query: 'Great Wall of China', timestamp: '1 -> 3' },
+	{ Query: 'Chinese Empire', timestamp: '11 -> 12' },
+	// { Query: 'Ming Dynasty', timestamp: '7 -> 8' },
+	// { Query: 'Chinese Empire', timestamp: '11 -> 12' },
+	// { Query: 'brick, tamperth, and stone', timestamp: '17 -> 18' },
+]
+
+// mergeAudio({
+// 	videoFilePath,
+// 	audioFilePath: outputFilePath,
+// 	outputVideoPath: outputVideoFilePath,
+// })
+
+// imageProccessing({ language: '', queries })
+
+// downloadImages(queries)
+
 // app.post('/generate', async (req, res) => {
 // 	try {
 // 		const { language, topic } = req.body
