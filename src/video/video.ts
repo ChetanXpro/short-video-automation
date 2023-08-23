@@ -95,10 +95,9 @@ export const mergeAudio = async ({
 				exec(backgroundAudiocommand, (error, stdout, stderr) => {
 					if (error) {
 						console.error('Error:', error)
-						return
+						reject(error)
 					}
-					console.log('stdout:', stdout)
-					console.error('stderr:', stderr)
+					resolve(stdout ? stdout : stderr)
 				})
 			})
 			.on('error', err => {

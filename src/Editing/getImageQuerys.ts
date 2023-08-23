@@ -9,25 +9,20 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration)
 
 export const getImageQuerys = async () => {
-	return new Promise((resolve, reject) => {
-		fs.readFile('/home/chetan/code/ts-content-gpt/basicaudio.wav.srt', 'utf8', async function (err, data) {
-			if (err) throw err
-			const chatCompletion: any = await openai.createChatCompletion({
-				model: 'gpt-3.5-turbo',
-				messages: [{ role: 'system', content: tryy(data) }],
-			})
-			// console.log('chatCompletion: ', chatCompletion.data.choices[0].message)
+	// fs.readFile('/home/chetan/code/ts-content-gpt/basicaudio.wav.srt', 'utf8', async function (err, data) {
+	// 	if (err) throw err
 
-			// console.log(JSON.stringify(chatCompletion.data.choices[0].message?.content)[0])
+	// })
 
-			const formattedString = chatCompletion.data.choices[0].message?.content.replace(/\\/g, '') // Remove escape characters
-			const jsonArray = JSON.parse(formattedString)
+	const file = fs.readFileSync('/home/chetan/code/ts-content-gpt/basicaudio.wav.srt', 'utf8')
 
-			// console.log('jsonArray: ', jsonArray)
-
-			if (!jsonArray || jsonArray?.length === 0) return reject('No jsonArray found')
-
-			resolve(jsonArray)
-		})
+	const chatCompletion: any = await openai.createChatCompletion({
+		model: 'gpt-3.5-turbo',
+		messages: [{ role: 'system', content: tryy(file, 5) }],
 	})
+	// console.log('chatCompletion: ', chatCompletion)
+
+	const obj = JSON.parse(chatCompletion.data.choices[0].message.content)
+
+	return await obj
 }

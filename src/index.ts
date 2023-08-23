@@ -47,11 +47,15 @@ const generateYoutubeShort = async (language: string, topic: string) => {
 		// 	outputVideoPath: outputVideoFilePath,
 		// })
 
-		const queries = await getImageQuerys()
+		const queries: any = await getImageQuerys()
+
+		// if (!queries) throw new Error('Queries not generated')
 
 		console.log('QUERIES: ', queries)
 
-		await downloadImages(queries)
+		// console.log('rr: ', Object.values(queries))
+
+		await downloadImages(Object.values(queries))
 
 		await imageProccessing({ language: '', queries })
 
