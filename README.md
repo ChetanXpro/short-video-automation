@@ -1,2 +1,2 @@
 
-# content-automation
+# short-content-automation
