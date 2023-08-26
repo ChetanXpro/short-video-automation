@@ -25,35 +25,35 @@ const outputVideoFilePath = path.join(__dirname, '..', 'shorts', 'test.mp4')
 
 const generateYoutubeShort = async (language: string, topic: string) => {
 	try {
-		const script = await createShortScript({ language: language, topic: topic })
+		// const script = await createShortScript({ language: language, topic: topic })
 
-		console.log('SCRIPT GENERATED: ', script)
+		// console.log('SCRIPT GENERATED: ', script)
 
-		if (!script) throw new Error('Script not generated')
+		// if (!script) throw new Error('Script not generated')
 
-		await createAudio({ script, language, outputFilePath: inputFilePath })
+		// await createAudio({ script, language, outputFilePath: inputFilePath })
 
 		// console.log('AUDIO GENERATED SUCCESSFULLY', 'basicaudio.mp3')
 
-		await convertToWav(inputFilePath, outputFilePath)
+		// await convertToWav(inputFilePath, outputFilePath)
 
-		await whisper(outputFilePath)
+		// await whisper(outputFilePath)
 
 		// return
 
 		// console.log('MERGING AUDIO AND VIDEO')
 
-		await mergeAudio({
-			videoFilePath,
-			audioFilePath: outputFilePath,
-			outputVideoPath: outputVideoFilePath,
-		})
+		// await mergeAudio({
+		// 	videoFilePath,
+		// 	audioFilePath: outputFilePath,
+		// 	outputVideoPath: outputVideoFilePath,
+		// })
 
 		// return
 
 		const queries: any = await getImageQuerys()
 
-		// if (!queries) throw new Error('Queries not generated')
+		if (!queries) throw new Error('Queries not generated')
 
 		// console.log('QUERIES: ', typeof queries)
 
@@ -80,7 +80,7 @@ const generateYoutubeShort = async (language: string, topic: string) => {
 
 // app.use(express.json())
 
-generateYoutubeShort('english', 'indian fact')
+generateYoutubeShort('english', 'ukrain fact')
 
 const queries = [
 	{ Query: 'Great Wall of China', timestamp: '1 -> 3' },

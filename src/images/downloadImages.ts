@@ -1,15 +1,23 @@
 import axios from 'axios'
 import fs from 'fs'
 export const downloadImages = async (queries: any) => {
+	const PEXEL_BASE = `https://api.pexels.com/v1/`
 	const downloadPromises = queries.map(async (query: any) => {
-		const { data } = await axios.get(`https://api.unsplash.com/search/photos?query=${query}&page=1`, {
+		const { data } = await axios.get(`${PEXEL_BASE}search?query=${query}&per_page=1`, {
 			headers: {
-				Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
+				Authorization: `${process.env.PEXEL_API}`,
 			},
 		})
 
-		const url = data.results[0].urls.thumb
-		const response = await axios.get(url, {
+		// console.log('DATA: ', data)
+
+		const url = data.photos[0].src.small
+
+		const newHeight = 200
+
+		// Use string.replace() to replace the height value
+		const modifiedUrl = url.replace(/h=\d+/, `h=${newHeight}`)
+		const response = await axios.get(modifiedUrl, {
 			responseType: 'stream',
 		})
 
@@ -26,8 +34,7 @@ export const downloadImages = async (queries: any) => {
 
 	try {
 		// Wait for all promises to resolve
-		await Promise.all(downloadPromises)
-		console.log('All images downloaded successfully.')
+		return await Promise.all(downloadPromises)
 	} catch (error) {
 		console.error('Error downloading images:', error)
 	}

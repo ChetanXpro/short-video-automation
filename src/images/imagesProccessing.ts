@@ -66,17 +66,17 @@ export const imageProccessing = async ({
 				imgPath += ' -i ' + `/home/chetan/code/ts-content-gpt/${query.Query.split(' ').join('')}.jpg`
 			})
 
-			filter += `${imgPath} -filter_complex "[${prevIndex}:v][${currIndex}:v]overlay=25:25:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`
+			filter += `${imgPath} -filter_complex "[${prevIndex}:v][${currIndex}:v]overlay=(W-w)/2:(H-h)/2:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`
 			return
 		}
 
 		if (lastIndex) {
-			filter += `[${currIndex}:v]overlay=25:25:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`
+			filter += `[${currIndex}:v]overlay=(W-w)/2:(H-h)/2:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`
 			filter += `format=yuv420p[v]"`
 			return
 		}
 
-		filter += `[${currIndex}:v]overlay=25:25:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`
+		filter += `[${currIndex}:v]overlay=(W-w)/2:(H-h)/2:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`
 	})
 
 	// console.log('filter: ', filter)
@@ -91,5 +91,17 @@ export const imageProccessing = async ({
 			// console.log('stderr: ', stderr)
 		}
 		// console.log(stdout)
+
+		console.log('Video processing done')
+
+		// queryArr.forEach((query: IQuery, index: any) => {
+		// 	fs.unlink(`/home/chetan/code/ts-content-gpt/${query.Query.split(' ').join('')}.jpg`, err => {
+		// 		if (err) {
+		// 			console.error(err)
+		// 			return
+		// 		}
+		// 		//file removed
+		// 	})
+		// })
 	})
 }
