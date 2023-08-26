@@ -34,19 +34,36 @@ export const imageProccessing = async ({
 		Query: string
 		timestamp: string
 	}
+	let queryArr: any = []
+
+	for (const key in queries) {
+		let value = queries[key]
+
+		const newKey = `${Number(key)}-${Number(key) + 3}`
+
+		const obj = {
+			Query: value,
+			timestamp: newKey,
+		}
+
+		queryArr.push(obj)
+	}
+
+	console.log('queryArr: ', queryArr)
+
 	let filter = ''
-	queries.forEach((query: IQuery, index: any) => {
+	queryArr.forEach((query: IQuery, index: any) => {
 		const currIndex = index + 1
 		const prevIndex = index
-		const totalQuery = queries.length
+		const totalQuery = queryArr.length
 		const lastIndex = index === totalQuery - 1
 
-		const [startingTime, endTime] = query.timestamp.split('->')
+		const [startingTime, endTime] = query.timestamp.split('-')
 		if (index === 0) {
 			let imgPath = ''
 
-			queries.forEach((query: IQuery, index: any) => {
-				imgPath += ' -i ' + `/home/chetan/code/ts-content-gpt/${query.timestamp.split('->')[0].trim()}.jpg`
+			queryArr.forEach((query: IQuery, index: any) => {
+				imgPath += ' -i ' + `/home/chetan/code/ts-content-gpt/${query.Query.split(' ').join('')}.jpg`
 			})
 
 			filter += `${imgPath} -filter_complex "[${prevIndex}:v][${currIndex}:v]overlay=25:25:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`

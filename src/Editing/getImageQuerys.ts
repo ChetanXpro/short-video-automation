@@ -14,13 +14,13 @@ export const getImageQuerys = async () => {
 
 	// })
 
-	const file = fs.readFileSync('/home/chetan/code/ts-content-gpt/basicaudio.wav.srt', 'utf8')
+	const file = fs.readFileSync('/home/chetan/code/ts-content-gpt/basicaudio.wav.vtt', 'utf8')
 
 	const chatCompletion: any = await openai.createChatCompletion({
 		model: 'gpt-3.5-turbo',
 		messages: [{ role: 'system', content: tryy(file, 5) }],
 	})
-	// console.log('chatCompletion: ', chatCompletion)
+	console.log('chatCompletion: ', chatCompletion.data.choices[0].message.content)
 
 	const obj = JSON.parse(chatCompletion.data.choices[0].message.content)
 

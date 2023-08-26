@@ -21,43 +21,48 @@ const outputFilePath = path.join(__dirname, '..', 'basicaudio.wav')
 
 const videoFilePath = path.join(__dirname, '..', 'new.mp4')
 
-const outputVideoFilePath = path.join(__dirname, '..', 'shorts', 'ytshort.mp4')
+const outputVideoFilePath = path.join(__dirname, '..', 'shorts', 'test.mp4')
 
 const generateYoutubeShort = async (language: string, topic: string) => {
 	try {
-		// const script = await createShortScript({ language: language, topic: topic })
+		const script = await createShortScript({ language: language, topic: topic })
 
-		// console.log('SCRIPT GENERATED: ', script)
+		console.log('SCRIPT GENERATED: ', script)
 
-		// if (!script) throw new Error('Script not generated')
+		if (!script) throw new Error('Script not generated')
 
-		// await createAudio({ script, language, outputFilePath: inputFilePath })
+		await createAudio({ script, language, outputFilePath: inputFilePath })
 
 		// console.log('AUDIO GENERATED SUCCESSFULLY', 'basicaudio.mp3')
 
-		// await convertToWav(inputFilePath, outputFilePath)
+		await convertToWav(inputFilePath, outputFilePath)
 
-		// await whisper(outputFilePath)
+		await whisper(outputFilePath)
+
+		// return
 
 		// console.log('MERGING AUDIO AND VIDEO')
 
-		// await mergeAudio({
-		// 	videoFilePath,
-		// 	audioFilePath: outputFilePath,
-		// 	outputVideoPath: outputVideoFilePath,
-		// })
+		await mergeAudio({
+			videoFilePath,
+			audioFilePath: outputFilePath,
+			outputVideoPath: outputVideoFilePath,
+		})
+
+		// return
 
 		const queries: any = await getImageQuerys()
 
 		// if (!queries) throw new Error('Queries not generated')
 
-		console.log('QUERIES: ', queries)
-
-		// console.log('rr: ', Object.values(queries))
+		// console.log('QUERIES: ', typeof queries)
 
 		await downloadImages(Object.values(queries))
 
-		await imageProccessing({ language: '', queries })
+		await imageProccessing({
+			language: '',
+			queries: queries,
+		})
 
 		return
 		// uploadVideos('facts', 'facts', ['#facts', '#trending', '#shorts'], outputVideoFilePath)

@@ -55,7 +55,7 @@ export const mergeAudio = async ({
 	const adjustedTrimDuration = trimDuration / audioSpeed
 	const videoFilter = `scale=${targetWidth}:-1,pad=${targetWidth}:${targetHeight}:(ow-iw)/2:(oh-ih)/2:black`
 	const audioFilter = `atempo=${audioSpeed},aformat=sample_rates=44100:channel_layouts=stereo`
-	const srtFilePath = 'basicaudio.wav.srt'
+	const srtFilePath = 'basicaudio.wav.vtt'
 	const newSrtFilePath = path.join(__dirname, '..', '..', srtFilePath)
 	const backgroundMusicFilePath = path.join(__dirname, '..', '..', 'bg.mp3')
 

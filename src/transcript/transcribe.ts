@@ -7,7 +7,9 @@ export const whisper = async (filePath: string, options?: any) => {
 			modelName: 'tiny.en',
 			autoDownloadModelName: 'tiny.en',
 			whisperOptions: {
-				outputInSrt: true, // get output result in srt file
+				outputInSrt: false, // get output result in srt file
+				outputInText: false, // get output result in text file
+				outputInVtt: true, // get output result in vtt file
 
 				timestamps_length: 10, // amount of dialogue per timestamp pair
 				splitOnWord: true, //split on word rather than on token

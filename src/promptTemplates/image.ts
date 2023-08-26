@@ -60,8 +60,9 @@ You are a shorts video editor. Your audience is people from 18 yo to 40yo. Your 
   <<${timestamp}>>
 
 
-  Every few transcript captions, find an image that can be shown. Really understand the context and emotions for the image to be good ! The queries should describe OBJECTS or PERSONS. Write it in a dictionary with timestamp to query format like { 1.0: 'happy person', 3.2: 'sad person', ...} . DON'T GENERATE A QUERY FOR EACH CAPTION. Generate <<${totalQuerys}>> image queries and time them accordingly in the video. NEVER use the same search query for multiple captions. Make sure that the timestamps make sense.
+  Every few transcript captions, find an image that can be shown. Really understand the context and emotions for the image to be good ! The queries should describe OBJECTS or PERSONS. Write it in a dictionary with timestamp to query format like { "1": "happy person", "3": "sad person", ...} . DON'T GENERATE A QUERY FOR EACH CAPTION. Generate <<${totalQuerys}>> image queries and time them accordingly in the video. NEVER use the same search query for multiple captions. Make sure that the timestamps make sense.
   NEVER USE ABSTRACT NOUNS IN THE QUERIES. ALWAYS USE REAL OBJECTS OR PERSONS IN THE QUERIES.
+  In timestamp time will be like this : 00:00:01,530 here 01 us secounds , so you only have to return seconds part of timestamp , for example if timestamp is 00:00:10,000 --> 00:00:15,000 , you only have to return 10 , so i can show image after 10  seconds of video
   Makr sure to return a parsable JSON object.
   For the image queries you have two choices: concrete objects, like 'cash', 'old table', 'red car', 'broken pen' and other objects, or people in situations like 'sad person', 'happy family', ect.. Choose more objects than people.
   The <<${totalQuerys}>> generated image queries and their timestamps, make sure to respect the number <<${totalQuerys}>>:
