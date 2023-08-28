@@ -37,7 +37,7 @@
 		"@types/fs-extra": "^11.0.1",
 		"@types/node": "^20.5.1",
 		"@types/shelljs": "^0.8.12",
-		"prettier": "^3.0.1",
+		"prettier": "^3.0.2",
 		"ts-node": "^10.8.2",
 		"typescript": "^5.2.2"
 	}
