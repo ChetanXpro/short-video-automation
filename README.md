@@ -1,3 +1,3 @@
 
 # short-video-automation
-- a short automation tool which all create different short content
+A short content automation bot, which can generate short videos for youtube and instagram
