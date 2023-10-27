@@ -7,7 +7,10 @@ Automate the creation of short videos with text-to-speech, audio merging, image 
 Here are some example videos created using Short Video Automation:
 
 1. A fact video about india.
-   https://github.com/ChetanXpro/short-video-automation/assets/107798155/860d7108-af86-459a-816e-e5e9c3bf64e2
+
+https://github.com/ChetanXpro/short-video-automation/assets/107798155/c6250402-ff3e-4a60-b616-a0954e8acdcf
+
+
 
 
 
