@@ -11,7 +11,7 @@ Here are some example videos created using Short Video Automation:
 
 
 
-![output](https://github.com/ChetanXpro/short-video-automation/assets/107798155/76d4d86e-7a57-4f58-b307-1995995bace8)
+
 
 
 
