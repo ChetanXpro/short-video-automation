@@ -1,6 +1,7 @@
 # Short Video Automation
 
 Automate the creation of short videos with text-to-speech, audio merging, image overlay, and background audio.
+It takes average 40 second to create a sort video
 
 
 # Example videos
