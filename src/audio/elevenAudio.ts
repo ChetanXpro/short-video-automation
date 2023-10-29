@@ -10,7 +10,7 @@ export const createAudio = async ({
 	language,
 	stabilityValue = 0.2,
 	similarityBoostValue = 0.1,
-	voice = 'VR6AewLTigWG4xSOukaG',
+	voice = 'wViXBPUzp2ZZixB1xQuM',
 	outputFilePath = 'basicaudio.mp3',
 }: {
 	script: string

@@ -8,16 +8,16 @@ const configuration = new Configuration({
 })
 const openai = new OpenAIApi(configuration)
 
-export const getImageQuerys = async () => {
+export const getImageQuerys = async (subtitlesPath: string) => {
 	// fs.readFile('/home/chetan/code/ts-content-gpt/basicaudio.wav.srt', 'utf8', async function (err, data) {
 	// 	if (err) throw err
 
 	// })
 
-	const file = fs.readFileSync('/home/chetan/code/ts-content-gpt/basicaudio.wav.vtt', 'utf8')
+	const file = fs.readFileSync(subtitlesPath, 'utf8')
 
 	const chatCompletion: any = await openai.createChatCompletion({
-		model: 'gpt-3.5-turbo',
+		model: 'gpt-4',
 		messages: [{ role: 'system', content: tryy(file, 5) }],
 	})
 	console.log('chatCompletion: ', chatCompletion.data.choices[0].message.content)

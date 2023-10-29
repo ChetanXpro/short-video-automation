@@ -3,9 +3,9 @@ import { PromptTemplate } from 'langchain/prompts'
 import ffmpeg from 'fluent-ffmpeg'
 import { LLMChain } from 'langchain/chains'
 import { imageTemp, tryy } from '../promptTemplates/image'
-import path from 'ffmpeg-static'
+// import path from 'ffmpeg-static'
 
-ffmpeg.setFfmpegPath(path!)
+// ffmpeg.setFfmpegPath(path!)
 
 import { Configuration, OpenAIApi } from 'openai'
 import fs from 'fs'
@@ -25,10 +25,9 @@ export const imageProccessing = async ({
 	topic?: string
 	queries: any
 }) => {
-	const inputVideoPath = '/home/chetan/code/ts-content-gpt/tryyyyyyyyy.mp4'
-	const inputImagePath = '/home/chetan/code/ts-content-gpt/oo.jpg'
-	const outputVideoPath = '/home/chetan/code/ts-content-gpt/yyooooooo.mp4'
-	const targetTimestamp = '00:00:10.000'
+	const inputVideoPath = '/Users/chetan/Developer/code/short-video-automation/shorts/test.mp4'
+
+	const outputVideoPath = '/Users/chetan/Developer/code/short-video-automation/final.mp4'
 
 	interface IQuery {
 		Query: string
@@ -39,7 +38,7 @@ export const imageProccessing = async ({
 	for (const key in queries) {
 		let value = queries[key]
 
-		const newKey = `${Number(key)}-${Number(key) + 3}`
+		const newKey = `${Number(key)}-${Number(key) + 1}`
 
 		const obj = {
 			Query: value,
@@ -63,7 +62,9 @@ export const imageProccessing = async ({
 			let imgPath = ''
 
 			queryArr.forEach((query: IQuery, index: any) => {
-				imgPath += ' -i ' + `/home/chetan/code/ts-content-gpt/${query.Query.split(' ').join('')}.jpg`
+				imgPath +=
+					' -i ' +
+					`/Users/chetan/Developer/code/short-video-automation/${query.Query.split(' ').join('')}.jpg`
 			})
 
 			filter += `${imgPath} -filter_complex "[${prevIndex}:v][${currIndex}:v]overlay=(W-w)/2:(H-h)/2:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`
@@ -81,7 +82,7 @@ export const imageProccessing = async ({
 
 	// console.log('filter: ', filter)
 
-	const mainFilter = `${path} -i ${inputVideoPath}  ${filter} -map "[v]" -map 0:a -c:v libx264 -c:a copy ${outputVideoPath} `
+	const mainFilter = `ffmpeg -i ${inputVideoPath}  ${filter} -map "[v]" -map 0:a -c:v libx264 -c:a copy ${outputVideoPath} `
 
 	console.log('mainFilter: ', mainFilter)
 
@@ -93,6 +94,8 @@ export const imageProccessing = async ({
 		// console.log(stdout)
 
 		console.log('Video processing done')
+
+		// return new Promise.all()
 
 		// queryArr.forEach((query: IQuery, index: any) => {
 		// 	fs.unlink(`/home/chetan/code/ts-content-gpt/${query.Query.split(' ').join('')}.jpg`, err => {

@@ -5,11 +5,6 @@ import ffmpegPath from 'ffmpeg-static'
 import ffmpegProb from 'ffprobe-static'
 import { exec } from 'child_process'
 
-if (ffmpegPath) {
-	ffmpeg.setFfprobePath(ffmpegProb.path)
-	ffmpeg.setFfmpegPath(ffmpegPath)
-}
-
 export const mergeAudio = async ({
 	videoFilePath,
 	audioFilePath,
@@ -62,46 +57,52 @@ export const mergeAudio = async ({
 	const out = path.join(__dirname, '..', '..', 'tryyyyyyyyy.mp4')
 	const subtitleStyle =
 		"force_style='Alignment=6,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
-
-	const backgroundAudiocommand = `${ffmpegPath} -i ${outputVideoPath} -i ${backgroundMusicFilePath} -filter_complex "[0:a]volume=1[a1];[1:a]volume=0.4[b1];[a1][b1]amix=inputs=2[aout]" -map 0:v -map "[aout]" -c:v copy -c:a aac -shortest ${out}`
+	const tiktokFilterWithSubtitles =
+		"scale=-1:1920:force_original_aspect_ratio=decrease,crop=1080:1920,subtitles=/Users/chetan/Developer/code/short-video-automation/basicaudio.wav.vtt:force_style='Alignment=10,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
+	const sortVideFilterWithSubtitles =
+		"scale=-1:1920:force_original_aspect_ratio=decrease,crop=1080:1920,subtitles=/Users/chetan/Developer/code/short-video-automation/basicaudio.wav.vtt:force_style='Alignment=6,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
+	const backgroundAudiocommand = `ffmpeg -i ${outputVideoPath} -i ${backgroundMusicFilePath} -filter_complex "[0:a]volume=1[a1];[1:a]volume=0.4[b1];[a1][b1]amix=inputs=2[aout]" -map 0:v -map "[aout]" -c:v copy -c:a aac -shortest ${out} `
 
 	return new Promise((resolve, reject) => {
-		ffmpeg(videoFilePath)
+		// continue with the same part before
+
+		ffmpeg()
+			.input(videoFilePath)
 			.inputOptions(`-t ${adjustedTrimDuration}`)
 			.input(audioFilePath)
-
-			.videoFilter(videoFilter)
-			.audioFilter(audioFilter)
 			.input(backgroundMusicFilePath)
-
-			.outputOptions([
-				'-map',
-				'0:v',
-				'-map',
-				'1:a',
-				'-c:v libx264',
-				'-c:a aac',
-				'-vf',
-				`subtitles=${newSrtFilePath}:${subtitleStyle}`,
-				// '-apad',
+			.videoFilter(tiktokFilterWithSubtitles)
+			.complexFilter([
+				{
+					filter: 'volume',
+					options: 1,
+					inputs: '1:a',
+					outputs: 'volumeAdjustedAudio',
+				},
+				{
+					filter: 'volume',
+					options: 0.1,
+					inputs: '2:a',
+					outputs: 'volumeAdjustedBGM',
+				},
+				{
+					filter: 'amix',
+					options: { inputs: 2, duration: 'shortest' },
+					inputs: ['volumeAdjustedAudio', 'volumeAdjustedBGM'],
+					outputs: 'amixed',
+				},
 			])
+			.outputOptions(['-map', '0:v', '-map', '[amixed]', '-c:v libx264', '-c:a aac'])
 			.output(outputVideoPath)
 			.on('start', commandLine => {
 				console.log('Spawned Ffmpeg with command: ' + commandLine)
 			})
 			.on('end', () => {
 				console.log('Audio added to video complete!')
-
-				exec(backgroundAudiocommand, (error, stdout, stderr) => {
-					if (error) {
-						console.error('Error:', error)
-						reject(error)
-					}
-					resolve(stdout ? stdout : stderr)
-				})
+				resolve('done')
 			})
 			.on('error', err => {
-				console.error('Error during audio adding to video:', err.message)
+				console.error('Error during audio adding to video:', err)
 				reject(err)
 			})
 			.run()

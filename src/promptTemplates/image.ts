@@ -45,26 +45,23 @@ You will output in parsable JSON object , all these json will be in a array.
 
 export const tryy = (timestamp: string, totalQuerys: any) => `
 
-You are a shorts video editor. Your audience is people from 18 yo to 40yo. Your style of editing is pretty simple, you take the transcript of your short and put a very simple google image to illustrate the narrated sentances.
+Create a script for a video editor who makes brief, interactive, and illustrative shorts for an audience aged 18-40.
 
-  Each google image is searched with a short query of two words maximum. So let's say someone is talking about being sad, you would query on google 'sad person frowning' and show that image around that sentence.
+The task includes mapping timestamps of a video to relevant keywords or phrases (maximum two words) which can be used to search for fitting illustrations on Google Images. These queried images should serve as meaningful visual accompaniments to specific sentences in the video's transcript. For example, if a sentence mentions sadness, the corresponding image might be searched using the phrase 'frowning person'.
 
-  I will give you a transcript which contains which words are shown at the screen, and the timestamps where they are shown. Understand the transcript, and time images at timestamps and, write me the query for each image. For the image queries you have two choices: concrete objects, like 'cash', 'old table', and other objects, or people in situations like 'sad person', 'happy family', ect... Generate a maximum of <<NUMBER>> image queries equally distributed in the video.
+Below are some parameters to guide the image query selections:
 
-  Avoid depicting shocking or nude / crude images, since your video will get demonetized. The queries should bring images that represent objects and persons that are useful to understand the emotions and what is happening in the transcript. The queries should describe OBJECTS or PERSONS. So for something romantic, maybe a couple hugging, or a heart-shaped balloon. For the image queries you have two choices: concrete objects, like 'cash', 'old table', and other objects, or people in situations like 'sad person', 'happy family', ect..
+Queries should focus on tangible objects (e.g., 'cash', 'old table') or individuals in distinct situations (e.g., 'sad person', 'happy family').
+Avoid anything that could be deemed explicit, shocking, or inappropriate as this may lead to video demonetization.
+Avoid overly generic or abstract words in queries that may yield unsuitable images.
+The designated image should accurately depict the ongoing narrative in the video and help viewers understand the context.
+The total number of image queries should not exceed <<${totalQuerys}>> and should be evenly distributed throughout the video's duration.
+Here is the specific transcript to work with: <<${timestamp}>>
 
-  The images should be an image representation of what is happening. Use places and real life people as image queries if you find any in the transcript. Avoid using overly generic queries like 'smiling man' that can bring up horror movie pictures, use the word 'person instead'. Instead, try to use more specific words that describe the action or emotion in the scene. Also, try to avoid queries that don't represent anything in images, such as abstract concepts, ideas, or feelings. MAKE SURE THAT THE QUERIES ARE VERY DESCRIPTIVE AND VISUAL AND CAN BE DRAWN AND NEVER USE WORDS THAT ONLY DESCRIBE AN ABSTRACT IDEA. NEVER USE ABSTRACT NOUNS IN THE QUERIES. ALWAYS USE REAL OBJECTS OR PERSONS IN THE QUERIES.
+Please review the transcript and generate <<${totalQuerys}>> image queries corresponding to this content. The queries should be formatted in JSON object (Example: { "10": "happy person", "15": "sad person", ...}). The key should be the second part of the timestamp i.e., if timestamp is 00:00:10,000 --> 00:00:15,000, then key should be 10. Make sure that each query is unique and the total count is equal to <<${totalQuerys}>>."
 
-  Transcript:
+Note: The emphasis here is on selecting image queries that are concrete, descriptive, visually representable, and relevant to the video's context. Abstract concepts or ideas should be converted into visual or tangible representations wherever possible.
 
-  <<${timestamp}>>
-
-
-  Every few transcript captions, find an image that can be shown. Really understand the context and emotions for the image to be good ! The queries should describe OBJECTS or PERSONS. Write it in a dictionary with timestamp to query format like { "1": "happy person", "3": "sad person", ...} . DON'T GENERATE A QUERY FOR EACH CAPTION. Generate <<${totalQuerys}>> image queries and time them accordingly in the video. NEVER use the same search query for multiple captions. Make sure that the timestamps make sense.
-  NEVER USE ABSTRACT NOUNS IN THE QUERIES. ALWAYS USE REAL OBJECTS OR PERSONS IN THE QUERIES.
-  In timestamp time will be like this : 00:00:01,530 here 01 us secounds , so you only have to return seconds part of timestamp , for example if timestamp is 00:00:10,000 --> 00:00:15,000 , you only have to return 10 , so i can show image after 10  seconds of video
-  Makr sure to return a parsable JSON object.
-  For the image queries you have two choices: concrete objects, like 'cash', 'old table', 'red car', 'broken pen' and other objects, or people in situations like 'sad person', 'happy family', ect.. Choose more objects than people.
-  The <<${totalQuerys}>> generated image queries and their timestamps, make sure to respect the number <<${totalQuerys}>>:
+ONLY RETURN THE PARSABLE JSON OBJECTS IN THE RESPONSE. DO NOT RETURN ANYTHING ELSE.
 
 `

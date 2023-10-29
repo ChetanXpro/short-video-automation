@@ -25,7 +25,7 @@ export const createShortScript = async ({ language, topic }: { language: string;
 
 		if (!JSON.parse(res.text).script) throw new Error('Error in Script not generated')
 
-		console.log('Script: ', JSON.parse(res.text))
+		// console.log('Script: ', JSON.parse(res.text))
 
 		return JSON.parse(res.text).script
 	} catch (error) {
