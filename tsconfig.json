@@ -17,5 +17,5 @@
 		"esModuleInterop": true,
 		"pretty": true
 	},
-	"include": ["src/**/*"]
+	"include": ["src/**/*", "createImage.js"]
 }

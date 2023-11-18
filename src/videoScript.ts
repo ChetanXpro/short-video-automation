@@ -3,7 +3,7 @@ import { PromptTemplate } from 'langchain/prompts'
 
 import { LLMChain } from 'langchain/chains'
 
-import { createScriptTemplate, temp } from './promptTemplates/templates'
+import { createScriptTemplate, summary, temp } from './promptTemplates/templates'
 
 export const createShortScript = async ({ language, topic }: { language: string; topic: string }) => {
 	try {
@@ -32,23 +32,30 @@ export const createShortScript = async ({ language, topic }: { language: string;
 		console.log('Error in createShortScript: ', error)
 	}
 }
+export const summarizeShortScript = async ({ script }: { script: string }) => {
+	try {
+		console.log('Script...')
 
-// import { Configuration, OpenAIApi } from 'openai'
+		const model = new OpenAI({
+			openAIApiKey: process.env.OPENAI_API,
+			temperature: 0.1,
+			modelName: 'gpt-4',
+		})
 
-// const configuration = new Configuration({
-// 	apiKey: process.env.OPENAI_API,
-// })
-// const openai = new OpenAIApi(configuration)
+		const prompt = PromptTemplate.fromTemplate(summary)
 
-// export const createShortScript = async ({ language, topic }: { language: string; topic: string }) => {
-// 	const chatCompletion = await openai.createChatCompletion({
-// 		model: 'gpt-3.5-turbo',
-// 		messages: [{ role: 'system', content: createScriptTemplate(language, topic) }],
-// 	})
-// 	// console.log('chatCompletion: ', chatCompletion.data.choices[0].message)
+		// console.log('Prompt: ', prompt)
 
-// 	if (!JSON.parse(chatCompletion.data.choices[0].message?.content!)?.script)
-// 		throw new Error('Error in Script not generated')
+		const chain = new LLMChain({ llm: model, prompt })
 
-// 	return JSON.parse(chatCompletion.data.choices[0].message?.content!)?.script
-// }
+		const res = await chain.call({ script })
+
+		if (!JSON.parse(res.text).script) throw new Error('Error in Script not generated')
+
+		// console.log('Script: ', JSON.parse(res.text))
+
+		return JSON.parse(res.text).script
+	} catch (error) {
+		console.log('Error in createShortScript: ', error)
+	}
+}

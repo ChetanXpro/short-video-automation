@@ -1,18 +1,17 @@
 import ffmpeg from 'fluent-ffmpeg'
-import fs from 'fs'
+
 import path from 'path'
-import ffmpegPath from 'ffmpeg-static'
-import ffmpegProb from 'ffprobe-static'
-import { exec } from 'child_process'
 
 export const mergeAudio = async ({
 	videoFilePath,
 	audioFilePath,
 	outputVideoPath,
+	subtitlePath,
 }: {
 	videoFilePath: string
 	audioFilePath: string
 	outputVideoPath: string
+	subtitlePath: string
 }) => {
 	const videodata: any = await new Promise((resolve, reject) => {
 		ffmpeg.ffprobe(videoFilePath, (err, videoMetadata) => {
@@ -34,10 +33,6 @@ export const mergeAudio = async ({
 		})
 	})
 
-	// console.log('videodata: ', videodata)
-	// console.log('audiodata: ', audiodata)
-	// const backgroundMusicFilePath = path.join(__dirname, '..', '..', 'bg.mp3')
-
 	const videoDurationInSeconds = videodata.format.duration
 
 	const audioDurationInSeconds = audiodata.format.duration
@@ -45,23 +40,14 @@ export const mergeAudio = async ({
 	// Calculate how many times the audio needs to be repeated to match the video duration
 	const trimDuration = Math.min(videoDurationInSeconds!, audioDurationInSeconds!)
 	const audioSpeed = 1
-	const targetWidth = 1080
-	const targetHeight = 1920
-	const adjustedTrimDuration = trimDuration / audioSpeed
-	const videoFilter = `scale=${targetWidth}:-1,pad=${targetWidth}:${targetHeight}:(ow-iw)/2:(oh-ih)/2:black`
-	const audioFilter = `atempo=${audioSpeed},aformat=sample_rates=44100:channel_layouts=stereo`
-	const srtFilePath = 'basicaudio.wav.vtt'
-	const newSrtFilePath = path.join(__dirname, '..', '..', srtFilePath)
-	const backgroundMusicFilePath = path.join(__dirname, '..', '..', 'bg.mp3')
 
-	const out = path.join(__dirname, '..', '..', 'tryyyyyyyyy.mp4')
-	const subtitleStyle =
-		"force_style='Alignment=6,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
+	const adjustedTrimDuration = trimDuration / audioSpeed
+
+	const backgroundMusicFilePath = path.join(__dirname, '..', '..', 'bg.mp3')
+	
+
 	const tiktokFilterWithSubtitles =
-		"scale=-1:1920:force_original_aspect_ratio=decrease,crop=1080:1920,subtitles=/Users/chetan/Developer/code/short-video-automation/basicaudio.wav.vtt:force_style='Alignment=10,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
-	const sortVideFilterWithSubtitles =
-		"scale=-1:1920:force_original_aspect_ratio=decrease,crop=1080:1920,subtitles=/Users/chetan/Developer/code/short-video-automation/basicaudio.wav.vtt:force_style='Alignment=6,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'"
-	const backgroundAudiocommand = `ffmpeg -i ${outputVideoPath} -i ${backgroundMusicFilePath} -filter_complex "[0:a]volume=1[a1];[1:a]volume=0.4[b1];[a1][b1]amix=inputs=2[aout]" -map 0:v -map "[aout]" -c:v copy -c:a aac -shortest ${out} `
+		`scale=-1:1920:force_original_aspect_ratio=decrease,crop=1080:1920,subtitles=${subtitlePath}:force_style='Alignment=10,FontName=Trebuchet,FontSize=18,PrimaryColour=&Hffffff&,OutlineColour=&H00000000&,MarginV=25'`
 
 	return new Promise((resolve, reject) => {
 		// continue with the same part before

@@ -67,6 +67,8 @@ export const imageProccessing = async ({
 					`/Users/chetan/Developer/code/short-video-automation/${query.Query.split(' ').join('')}.jpg`
 			})
 
+			// const com = `/Users/chetan/Developer/code/short-video-automation/${}`
+
 			filter += `${imgPath} -filter_complex "[${prevIndex}:v][${currIndex}:v]overlay=(W-w)/2:(H-h)/2:enable='between(t,${startingTime.trim()},${endTime.trim()})'[v${currIndex}];[v${currIndex}]`
 			return
 		}
@@ -97,14 +99,17 @@ export const imageProccessing = async ({
 
 		// return new Promise.all()
 
-		// queryArr.forEach((query: IQuery, index: any) => {
-		// 	fs.unlink(`/home/chetan/code/ts-content-gpt/${query.Query.split(' ').join('')}.jpg`, err => {
-		// 		if (err) {
-		// 			console.error(err)
-		// 			return
-		// 		}
-		// 		//file removed
-		// 	})
-		// })
+		queryArr.forEach((query: IQuery, index: any) => {
+			fs.unlink(
+				`/Users/chetan/Developer/code/short-video-automation/${query.Query.split(' ').join('')}.jpg`,
+				err => {
+					if (err) {
+						console.error(err)
+						return
+					}
+					//file removed
+				}
+			)
+		})
 	})
 }

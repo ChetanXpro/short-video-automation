@@ -21,7 +21,7 @@ export const createAudio = async ({
 	outputFilePath?: string
 }) => {
 	try {
-		const voiceURL = `${elevenLabsAPI}/text-to-speech/${voice}`
+		const voiceURL = `${elevenLabsAPI}/text-to-speech/${voice}/stream?`
 
 		const response = await axios({
 			method: 'POST',
@@ -45,12 +45,20 @@ export const createAudio = async ({
 		const writeStream = fs.createWriteStream(outputFilePath)
 		response.data.pipe(writeStream)
 
-		return new Promise(resolve => {
+		await new Promise(resolve => {
 			writeStream.on('finish', () => {
 				console.log('Audio file created')
-				resolve('Audio file created')
+				 convertToWav(outputFilePath, outputFilePath.replace('.mp3', '.wav')).then(() => {
+					
+						resolve('Audio file created and converted to wav')
+					
+					
+				 })
+				
 			})
 		})
+
+		
 	} catch (error) {
 		console.log('Error in createAudio: ', error)
 	}
@@ -63,6 +71,7 @@ export const convertToWav = async (inputFilePath: string, outputFilePath: string
 	return new Promise((resolve, reject) => {
 		// ...
 		ffmpeg(inputFilePath)
+		
 			.toFormat('wav')
 			.audioFrequency(16000)
 			.output(outputFilePath)

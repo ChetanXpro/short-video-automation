@@ -13,7 +13,7 @@ export const downloadImages = async (queries: any) => {
 
 		const url = data.photos[0].src.small
 
-		const newHeight = 300
+		const newHeight = 400
 
 		// Use string.replace() to replace the height value
 		const modifiedUrl = url.replace(/h=\d+/, `h=${newHeight}`)
