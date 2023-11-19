@@ -27,6 +27,8 @@ import { useForm, Controller } from "react-hook-form";
 function PageHook() {
   
   const [isOpenModel, setIsOpenModel] = useState(false);
+  const [isWaitListed, setIsWaitListed] = useState(false);
+  const [error, setError] = useState("");
   
 
   const springConfig = { stiffness: 100, damping: 5 };
@@ -77,16 +79,24 @@ function PageHook() {
       });
       if (res.ok) {
         reset();
+        
+        setIsWaitListed(true);
+        setError("");
         handleOpenModel();
       }
 
       if (!res.ok) {
         reset();
+        setIsWaitListed(false);
+        setError("You are already in the waitlist!");
         throw new Error({ message: "Email already exists" });
+
       }
     } catch (error) {
       console.log(error);
-    }
+     
+      setIsWaitListed(false);
+    } 
   };
 
   return (
@@ -198,8 +208,9 @@ function PageHook() {
                     validateEmail(value) || " Invalid email format",
                 }}
               />
+              
 
-              <button
+              {!isWaitListed ? <button
                 disabled={isSubmitting}
                 className="flex items-center justify-center gap-x-3 bg-gradient-to-tr from-black from-50% via-black/40 to-gray-600/40 via-35% border-t-gray-700  disabled:cursor-not-allowed lg:w-36 shadow-md  border border-b-0 border-r-0 border-l-0 bg-black  mt-4 lg:mt-0 rounded-md px-2 py-2.5 w-full  font-InterMedium text-sm text-gray-200 dark:text-gray-500 "
                 type="submit"
@@ -210,10 +221,17 @@ function PageHook() {
                 ) : (
                   <span className="shrink-0">Join Waitlist</span>
                 )}
-              </button>
+              </button>: <div className="flex mt-3 gap-x-3 items-center p-2 pl-5 max-w-md bg-gradient-to-r from-10% dark:from-[#704705] text-[#3a2503] from-[#f5a524] via-30% dark:via-black dark:to-black to-100% to-[#704705] mx-auto rounded-md dark:text-white ">
+              <p>Thanks for joining the waitlist!
+                </p>
+                </div>}
 
-              
+               
             </form>
+            {error && <p className="border dark:border-white/25 border-[#704705] flex gap-x-3 items-center p-2 pl-5 max-w-md bg-gradient-to-r from-10% dark:from-[#704705] text-[#3a2503] from-[#f5a524] via-30% dark:via-black dark:to-black to-100% to-[#704705] mx-auto rounded-md dark:text-white ">
+                <PiWarningThin className="text-[#704705] dark:text-white text-lg" />
+                {error}
+              </p>}
           </div>
  
         </div>
