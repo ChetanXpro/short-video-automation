@@ -123,25 +123,19 @@ const quoraTemplatePath = path.join(tmpdir, 'quoraTemplate.jpg')
 // }
 
 
-const generateQuoraShort = async (language: string, topic: string) => {
+const generateQuoraShort = async (language: string, question:string,answer:string,quoraDetails:{
+	name:string,
+	upvote:string,
+	comment:string,
+	share:string,
+}) => {
 	try {
 		const startTime = performance.now()
-		// const script = await createShortScript({ language: language, topic: topic })
+		
+		await createQuoraImages(question,quoraDetails.upvote,quoraDetails.comment,quoraDetails.share,quoraTemplatePath,quoraDetails.name)
 
-		// console.log('SCRIPT GENERATED: ', script)
-
-		// if (!script) throw new Error('Script not generated')
-
-		const question = 'Is it true that programmers usually leave programming and change their career after 5 to 6 years because it’s difficult, or is it just a myth?'
-
-		const script = `
-
-		In my 43 year career as a software developer, I only knew one guy who left programming because it was too hard. He actually became a house husband and hasn’t worked for pay since then.
-
-I’ve known a few developers who did change careers. One guy, whose claim to fame was the developer of ill-fated E.T. the Extra-Terrestrial video game, became a psychotherapist. Another guy, who was a bit of child prodigy and worked a summer in my lab as a high schooler, became a well-known expert on constitutional law. I doubt that either of those people thought programming was too hard.
-
-A fair number of my colleagues did move from programming to project management. In the old days, there was no technical ladder and the only path for advancement was into management. I was a manager for three years until I realized that I was much better at and happier doing programming.
-		`
+		
+		const script = answer
 
 		const finalScript = await summarizeShortScript({ script })
 
@@ -160,7 +154,7 @@ A fair number of my colleagues did move from programming to project management. 
 
 
 
-		await createQuoraImages(question,"21.1k","200","65",quoraTemplatePath)
+		
 		
 		
 		const currentDir = process.cwd()
@@ -216,5 +210,25 @@ A fair number of my colleagues did move from programming to project management. 
 	}
 }
 
-generateQuoraShort('en', 'earth fact')
+generateQuoraShort(
+	'en-IN',
+	`Why do software developers age over 40 leave the industry?`,
+	`
+	I’ll give you my reasons, although I left it until my mid-fifties to quit (maybe temporarily) commercial software development.
+
+	Because I can. I don’t maintain an expensive lifestyle and I’ve earned enough to retire early.
+	I have lots of other things that I’m interested in that I’d like to pursue.
+	Company politics increasingly seem to intrude on the job, to the extent that it’s like wading through sludge.
+	Too many managers with little or no experience in the sector, who only seem interested in bringing in a large number of cheap but relatively incompetent staff and cranking out any old rubbish, rather than focusing on quality.
+	Diminishing returns to the point where even solving technical problems is not really fun any more. In the areas that I work in, the rate of technical change has slowed considerably compared to even ten years ago.
+	The new, interesting stuff like ML is such a paradigm shift that you can’t learn it on the job. Hence I’ve retreated back into academia.
+	Note that this is the opposite of some of the assertions that older developers “aren’t very good and can’t keep up”. Granted there’ll be a few people like that, but most of my peers seem to be feeling the same as I do.
+	`,
+	{
+		comment:"1",
+		upvote:"17",
+		share:"1",
+		name:"Martin Ingram"
+	}
+)
 

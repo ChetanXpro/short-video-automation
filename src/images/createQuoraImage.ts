@@ -10,7 +10,7 @@ const commentURI = 'data:image/jpeg;base64,' +  Buffer.from(fs.readFileSync('/Us
 const shareURI = 'data:image/jpeg;base64,' +  Buffer.from(fs.readFileSync('/Users/chetan/Developer/code/short-video-automation/share.png')).toString('base64')
 const varifiedURI = 'data:image/jpeg;base64,' +  Buffer.from(fs.readFileSync('/Users/chetan/Developer/code/short-video-automation/verified.png')).toString('base64')
 
-export async function createQuoraImages(question: string,upvote:string,comment:string,share:string,quoraTemplatePath:string) {
+export async function createQuoraImages(question: string,upvote:string,comment:string,share:string,quoraTemplatePath:string,name:string) {
 	const browser = await puppeteer.launch({
         headless:true
     })
@@ -51,7 +51,7 @@ export async function createQuoraImages(question: string,upvote:string,comment:s
   
         .container {
         	width: fit-content;
-				max-width: 30rem;
+				max-width: 25rem;
           display: flex;
           flex-direction: column;
           gap: 10px;
@@ -112,8 +112,7 @@ export async function createQuoraImages(question: string,upvote:string,comment:s
       <div class="container">
         <div class="upper">
         <img src="https://www.w3schools.com/howto/img_avatar.png" class="avatar" />
-          <p>Chetan</p>
-          <div class="verifyed-tick"></div>
+          <p>${name}</p>
           <img src="${varifiedURI}" class="verifyed-tick" />
         </div>
         <div >
