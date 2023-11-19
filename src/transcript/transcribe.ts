@@ -11,7 +11,7 @@ export const whisper = async (filePath: string, options?: any) => {
 				outputInText: false, // get output result in text file
 				outputInVtt: true, // get output result in vtt file
 
-				timestamps_length: 10, // amount of dialogue per timestamp pair
+				timestamps_length: 15, // amount of dialogue per timestamp pair
 				splitOnWord: true, //split on word rather than on token
 			},
 		})

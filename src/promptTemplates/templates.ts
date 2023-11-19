@@ -33,3 +33,26 @@ use "script" as key for the json object for script.
 For example like this just give me a object with key script and "script":"do you know .... "
 
 `
+
+export const summary = `
+  You are a scripter for a instagram creator , your work is to sumarize the script into 150 words.
+  Make sure the text is not longer than "150" words (keep the video pretty short and neat).
+ 
+specifications delimited by angle brackets .
+there will be certain petterns in the script that you will have to follow.
+mostly script is a question and answer type of script.
+
+
+
+
+
+
+Script: <{script}>
+
+
+# Output
+You will output the script in a JSON format of this kind, and only a parsable JSON object
+use "script" as key for the json object for script.
+For example like this just give me a object with key script and "script":"...."
+
+`
