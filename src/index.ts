@@ -121,15 +121,17 @@ const quoraTemplatePath = path.join(tmpdir, 'quoraTemplate.jpg')
 
 const generateQuoraShort = async ({
 	language,
-	question,
-	answer,
+	// question,
+	// answer,
+	Quoralink,
 	quoraDetails,
 }: {
 	language: string
-	question: string
-	answer: string
+	// question: string
+	// answer: string
+	Quoralink: string
 	quoraDetails: {
-		name: string
+		// name: string
 		upvote: string
 		comment: string
 		share: string
@@ -138,9 +140,7 @@ const generateQuoraShort = async ({
 	try {
 		const startTime = performance.now()
 
-		await scrapeQuora('https://qr.ae/pKuKFi')
-
-		return
+		const { name, question, answer } = await scrapeQuora(Quoralink)
 
 		await createQuoraImages(
 			question,
@@ -148,7 +148,7 @@ const generateQuoraShort = async ({
 			quoraDetails.comment,
 			quoraDetails.share,
 			quoraTemplatePath,
-			quoraDetails.name
+			name
 		)
 
 		const script = answer
@@ -227,33 +227,11 @@ const generateQuoraShort = async ({
 
 generateQuoraShort({
 	language: 'en-IN',
-	question: `What are some of the funniest “got fired” stories?
- 		`,
-	answer: ` was fired on the day I was going to hand in my resignation.
-
-	I hated the company: boss played favorites, personnel feedback was nonexistent, and they were very stingy with vacation time, even if you earned the days.
-	
-	The third point I found out too late. After earning 10 days of personal time, I requested for time off six months ahead. Not only was it declined, I also got a stern talking-to by the same boss who played favorites.
-	
-	I was so pissed off that I started looking for a job that very same night.
-	
-	Within two weeks, I got an offer from a company I interviewed the previous year who kept my résumé in the active bin.
-	
-	I moved my vacation date to the next month, upped the number of days, and got a business class ticket. I printed a resignation letter once I signed the offer at the new job.
-	
-	The next day, I cared not an iota at work. I was just waiting for 5:00 so that I can hand in my two weeks.
-	
-	4:30pm came and I got an email from the boss. I was being let go. They didn't really say why (not that I cared) but they were going to give me a full month’s pay to help me find a new job.
-	
-	i cleared out my desk, gave a quick thanks to my boss (co-workers have left at this point), and screamed when I got to my car.
-	
-	I got the final pay the week after, then collected unemployment for a few weeks, and had a bloody fantastic time on vacation.
-		`,
+	Quoralink: 'https://qr.ae/pKuKFi',
 	quoraDetails: {
 		comment: '320',
-		upvote: '21.5k',
+		upvote: '21.1k',
 		share: '23',
-		name: 'Sampreet Sharma',
 	},
 }).then(() => {
 	process.exit(0)

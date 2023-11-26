@@ -23,10 +23,15 @@ export async function scrapeQuora(url: string) {
 		const texts = elements.map((element: any) => element.innerText)
 		const answer = texts.join(' ')
 
+		// const upvoteElement = document.querySelector(
+		// 	'.q-box.dom_annotate_answer_action_bar_comment div div button div div div span'
+		// ) as any
+		// const upvote = upvoteElement ? upvoteElement.innerText : null
+
 		return { question, name, answer }
 	})
 
-	console.log(results)
-
 	await browser.close()
+
+	return results
 }
