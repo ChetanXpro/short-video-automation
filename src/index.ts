@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
-const os = require("os");
-
+// const os = require("os");
+import os from 'os'
 
 import { createShortScript, summarizeShortScript } from './videoScript'
 import { convertToWav, createAudio } from './audio/elevenAudio'
@@ -22,22 +22,19 @@ import { processVTTFile } from './utils/utils'
 import { centerImage } from './images/centerImage'
 import { mergeTwoAudios } from './audio/mergeTwoAudio'
 import { createQuoraImages } from './images/createQuoraImage'
+import { scrapeQuora } from './scrape'
 
-
-
-const tmpdir = os.tmpdir();
-console.log(tmpdir);
-
-
+const tmpdir = os.tmpdir()
+console.log(tmpdir)
 
 const answerAudioFilePath = path.join(tmpdir, 'answer.mp3')
 const questionAudioFilePath = path.join(tmpdir, 'question.mp3')
 
-const quoraAudioFilePath = path.join (tmpdir, 'quora.mp3')
+const quoraAudioFilePath = path.join(tmpdir, 'quora.mp3')
 
-const outputFilePath =     path.join (tmpdir, 'basicaudio.wav')
+const outputFilePath = path.join(tmpdir, 'basicaudio.wav')
 
-const videoFilePath =  path.join (__dirname, ".." , 'base.mp4')
+const videoFilePath = path.join(__dirname, '..', 'base.mp4')
 
 const outputVideoFilePath = path.join(tmpdir, 'test.mp4')
 const subTitlesFilePath = path.join(tmpdir, 'quora.wav.vtt')
@@ -122,44 +119,64 @@ const quoraTemplatePath = path.join(tmpdir, 'quoraTemplate.jpg')
 // 	}
 // }
 
-
-const generateQuoraShort = async (language: string, question:string,answer:string,quoraDetails:{
-	name:string,
-	upvote:string,
-	comment:string,
-	share:string,
+const generateQuoraShort = async ({
+	language,
+	question,
+	answer,
+	quoraDetails,
+}: {
+	language: string
+	question: string
+	answer: string
+	quoraDetails: {
+		name: string
+		upvote: string
+		comment: string
+		share: string
+	}
 }) => {
 	try {
 		const startTime = performance.now()
-		
-		await createQuoraImages(question,quoraDetails.upvote,quoraDetails.comment,quoraDetails.share,quoraTemplatePath,quoraDetails.name)
 
-		
+		await scrapeQuora('https://qr.ae/pKuKFi')
+
+		return
+
+		await createQuoraImages(
+			question,
+			quoraDetails.upvote,
+			quoraDetails.comment,
+			quoraDetails.share,
+			quoraTemplatePath,
+			quoraDetails.name
+		)
+
 		const script = answer
 
 		const finalScript = await summarizeShortScript({ script })
 
-
 		// Creating voice for answer
-		await createAudio({  script: finalScript, language, outputFilePath: answerAudioFilePath })
-
+		await createAudio({ script: finalScript, language, outputFilePath: answerAudioFilePath })
 
 		//  Creating voice for question
-		await createAudio({ script: question, language, outputFilePath: questionAudioFilePath ,voice:"IKne3meq5aSn9XLyUdCD"})
+		await createAudio({
+			script: question,
+			language,
+			outputFilePath: questionAudioFilePath,
+			voice: 'IKne3meq5aSn9XLyUdCD',
+		})
 
 		// console.log('AUDIO GENERATED SUCCESSFULLY', 'basicaudio.mp3')
 
+		await mergeTwoAudios({
+			questionAudio: questionAudioFilePath.replace('mp3', 'wav'),
+			answerAudio: answerAudioFilePath.replace('mp3', 'wav'),
+			finalOutput: quoraAudioFilePath,
+		})
 
-		await mergeTwoAudios({ questionAudio: questionAudioFilePath.replace('mp3','wav'), answerAudio: answerAudioFilePath.replace('mp3','wav') ,finalOutput:quoraAudioFilePath})
-
-
-
-		
-		
-		
 		const currentDir = process.cwd()
 
-		await whisper(quoraAudioFilePath.replace('mp3','wav'))
+		await whisper(quoraAudioFilePath.replace('mp3', 'wav'))
 
 		process.chdir(currentDir)
 		// // return
@@ -170,9 +187,9 @@ const generateQuoraShort = async (language: string, question:string,answer:strin
 
 		await mergeAudio({
 			videoFilePath,
-			audioFilePath: quoraAudioFilePath.replace('mp3','wav'),
+			audioFilePath: quoraAudioFilePath.replace('mp3', 'wav'),
 			outputVideoPath: outputVideoFilePath,
-			subtitlePath:subTitlesFilePath
+			subtitlePath: subTitlesFilePath,
 		})
 
 		await centerImage({
@@ -203,32 +220,41 @@ const generateQuoraShort = async (language: string, question:string,answer:strin
 		const elapsedTimeInSeconds = (endTime - startTime) / 1000
 
 		console.log(`Function took ${elapsedTimeInSeconds} seconds to finish.`)
-
-		
 	} catch (error) {
 		console.log('Error in createShortScript: ', error)
 	}
 }
 
-generateQuoraShort(
-	'en-IN',
-	`Why do software developers age over 40 leave the industry?`,
-	`
-	I’ll give you my reasons, although I left it until my mid-fifties to quit (maybe temporarily) commercial software development.
+generateQuoraShort({
+	language: 'en-IN',
+	question: `What are some of the funniest “got fired” stories?
+ 		`,
+	answer: ` was fired on the day I was going to hand in my resignation.
 
-	Because I can. I don’t maintain an expensive lifestyle and I’ve earned enough to retire early.
-	I have lots of other things that I’m interested in that I’d like to pursue.
-	Company politics increasingly seem to intrude on the job, to the extent that it’s like wading through sludge.
-	Too many managers with little or no experience in the sector, who only seem interested in bringing in a large number of cheap but relatively incompetent staff and cranking out any old rubbish, rather than focusing on quality.
-	Diminishing returns to the point where even solving technical problems is not really fun any more. In the areas that I work in, the rate of technical change has slowed considerably compared to even ten years ago.
-	The new, interesting stuff like ML is such a paradigm shift that you can’t learn it on the job. Hence I’ve retreated back into academia.
-	Note that this is the opposite of some of the assertions that older developers “aren’t very good and can’t keep up”. Granted there’ll be a few people like that, but most of my peers seem to be feeling the same as I do.
-	`,
-	{
-		comment:"1",
-		upvote:"17",
-		share:"1",
-		name:"Martin Ingram"
-	}
-)
-
+	I hated the company: boss played favorites, personnel feedback was nonexistent, and they were very stingy with vacation time, even if you earned the days.
+	
+	The third point I found out too late. After earning 10 days of personal time, I requested for time off six months ahead. Not only was it declined, I also got a stern talking-to by the same boss who played favorites.
+	
+	I was so pissed off that I started looking for a job that very same night.
+	
+	Within two weeks, I got an offer from a company I interviewed the previous year who kept my résumé in the active bin.
+	
+	I moved my vacation date to the next month, upped the number of days, and got a business class ticket. I printed a resignation letter once I signed the offer at the new job.
+	
+	The next day, I cared not an iota at work. I was just waiting for 5:00 so that I can hand in my two weeks.
+	
+	4:30pm came and I got an email from the boss. I was being let go. They didn't really say why (not that I cared) but they were going to give me a full month’s pay to help me find a new job.
+	
+	i cleared out my desk, gave a quick thanks to my boss (co-workers have left at this point), and screamed when I got to my car.
+	
+	I got the final pay the week after, then collected unemployment for a few weeks, and had a bloody fantastic time on vacation.
+		`,
+	quoraDetails: {
+		comment: '320',
+		upvote: '21.5k',
+		share: '23',
+		name: 'Sampreet Sharma',
+	},
+}).then(() => {
+	process.exit(0)
+})
