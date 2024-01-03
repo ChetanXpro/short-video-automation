@@ -13,12 +13,7 @@ Here are some example videos created using Short Video Automation:
 
 
 
-
-
-
-
-
-https://github.com/ChetanXpro/short-video-automation/assets/107798155/4d65f8e5-7f0b-4e22-ba72-cbf5dd7ddb6a
+https://github.com/ChetanXpro/short-video-automation/assets/107798155/551e7da0-9510-4990-bafc-51fa0e8d7a61
 
 
 
