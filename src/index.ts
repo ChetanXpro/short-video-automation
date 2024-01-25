@@ -155,6 +155,8 @@ const generateQuoraShort = async ({
 
 		const finalScript = await summarizeShortScript({ script })
 
+		if (!finalScript) throw new Error('Script not generated')
+
 		// Creating voice for answer
 		await createAudio({ script: finalScript, language, outputFilePath: answerAudioFilePath })
 
@@ -227,11 +229,11 @@ const generateQuoraShort = async ({
 
 generateQuoraShort({
 	language: 'en-IN',
-	Quoralink: 'https://qr.ae/pKuKFi',
+	Quoralink: 'https://qr.ae/pKeRZp',
 	quoraDetails: {
-		comment: '320',
-		upvote: '21.1k',
-		share: '23',
+		comment: '7',
+		upvote: '839',
+		share: '3',
 	},
 }).then(() => {
 	process.exit(0)
