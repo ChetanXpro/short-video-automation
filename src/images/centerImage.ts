@@ -28,28 +28,21 @@ centerImage = async ({ path, videoPath }: { path: string; videoPath: string }) =
 
 	console.log('mainFilter: ', mainFilter)
 
-	exec(mainFilter, (err, stdout, stderr) => {
-		if (err) {
-			console.error(err)
-			// console.log('stderr: ', stderr)
-		}
-		// console.log(stdout)
-
-		console.log('Video processing done')
-
-		// return new Promise.all()
-
-		// queryArr.forEach((query: IQuery, index: any) => {
-		// 	fs.unlink(
-		// 		`/Users/chetan/Developer/code/short-video-automation/${query.Query.split(' ').join('')}.jpg`,
-		// 		err => {
-		// 			if (err) {
-		// 				console.error(err)
-		// 				return
-		// 			}
-		// 			//file removed
-		// 		}
-		// 	)
-		// })
+	return new Promise((resolve, reject) => {
+		exec(mainFilter, (err, stdout, stderr) => {
+			if (err) {
+				console.error(err)
+				// console.log('stderr: ', stderr)
+				reject(err)
+			}
+			// console.log(stdout)
+	
+			console.log('Video processing done')
+			resolve(stdout)
+	
+	
+		})
 	})
+
+	
 }

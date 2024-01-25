@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
-const os = require("os");
-
+// const os = require("os");
+import os from 'os'
 
 import { createShortScript, summarizeShortScript } from './videoScript'
 import { convertToWav, createAudio } from './audio/elevenAudio'
@@ -22,22 +22,19 @@ import { processVTTFile } from './utils/utils'
 import { centerImage } from './images/centerImage'
 import { mergeTwoAudios } from './audio/mergeTwoAudio'
 import { createQuoraImages } from './images/createQuoraImage'
+import { scrapeQuora } from './scrape'
 
-
-
-const tmpdir = os.tmpdir();
-console.log(tmpdir);
-
-
+const tmpdir = os.tmpdir()
+console.log(tmpdir)
 
 const answerAudioFilePath = path.join(tmpdir, 'answer.mp3')
 const questionAudioFilePath = path.join(tmpdir, 'question.mp3')
 
-const quoraAudioFilePath = path.join (tmpdir, 'quora.mp3')
+const quoraAudioFilePath = path.join(tmpdir, 'quora.mp3')
 
-const outputFilePath =     path.join (tmpdir, 'basicaudio.wav')
+const outputFilePath = path.join(tmpdir, 'basicaudio.wav')
 
-const videoFilePath =  path.join (__dirname, ".." , 'base.mp4')
+const videoFilePath = path.join(__dirname, '..', 'base.mp4')
 
 const outputVideoFilePath = path.join(tmpdir, 'test.mp4')
 const subTitlesFilePath = path.join(tmpdir, 'quora.wav.vtt')
@@ -122,44 +119,66 @@ const quoraTemplatePath = path.join(tmpdir, 'quoraTemplate.jpg')
 // 	}
 // }
 
-
-const generateQuoraShort = async (language: string, question:string,answer:string,quoraDetails:{
-	name:string,
-	upvote:string,
-	comment:string,
-	share:string,
+const generateQuoraShort = async ({
+	language,
+	// question,
+	// answer,
+	Quoralink,
+	quoraDetails,
+}: {
+	language: string
+	// question: string
+	// answer: string
+	Quoralink: string
+	quoraDetails: {
+		// name: string
+		upvote: string
+		comment: string
+		share: string
+	}
 }) => {
 	try {
 		const startTime = performance.now()
-		
-		await createQuoraImages(question,quoraDetails.upvote,quoraDetails.comment,quoraDetails.share,quoraTemplatePath,quoraDetails.name)
 
-		
+		const { name, question, answer } = await scrapeQuora(Quoralink)
+
+		await createQuoraImages(
+			question,
+			quoraDetails.upvote,
+			quoraDetails.comment,
+			quoraDetails.share,
+			quoraTemplatePath,
+			name
+		)
+
 		const script = answer
 
 		const finalScript = await summarizeShortScript({ script })
 
+		if (!finalScript) throw new Error('Script not generated')
 
 		// Creating voice for answer
-		await createAudio({  script: finalScript, language, outputFilePath: answerAudioFilePath })
-
+		await createAudio({ script: finalScript, language, outputFilePath: answerAudioFilePath })
 
 		//  Creating voice for question
-		await createAudio({ script: question, language, outputFilePath: questionAudioFilePath ,voice:"IKne3meq5aSn9XLyUdCD"})
+		await createAudio({
+			script: question,
+			language,
+			outputFilePath: questionAudioFilePath,
+			voice: 'IKne3meq5aSn9XLyUdCD',
+		})
 
 		// console.log('AUDIO GENERATED SUCCESSFULLY', 'basicaudio.mp3')
 
+		await mergeTwoAudios({
+			questionAudio: questionAudioFilePath.replace('mp3', 'wav'),
+			answerAudio: answerAudioFilePath.replace('mp3', 'wav'),
+			finalOutput: quoraAudioFilePath,
+		})
 
-		await mergeTwoAudios({ questionAudio: questionAudioFilePath.replace('mp3','wav'), answerAudio: answerAudioFilePath.replace('mp3','wav') ,finalOutput:quoraAudioFilePath})
-
-
-
-		
-		
-		
 		const currentDir = process.cwd()
 
-		await whisper(quoraAudioFilePath.replace('mp3','wav'))
+		await whisper(quoraAudioFilePath.replace('mp3', 'wav'))
 
 		process.chdir(currentDir)
 		// // return
@@ -170,9 +189,9 @@ const generateQuoraShort = async (language: string, question:string,answer:strin
 
 		await mergeAudio({
 			videoFilePath,
-			audioFilePath: quoraAudioFilePath.replace('mp3','wav'),
+			audioFilePath: quoraAudioFilePath.replace('mp3', 'wav'),
 			outputVideoPath: outputVideoFilePath,
-			subtitlePath:subTitlesFilePath
+			subtitlePath: subTitlesFilePath,
 		})
 
 		await centerImage({
@@ -203,32 +222,19 @@ const generateQuoraShort = async (language: string, question:string,answer:strin
 		const elapsedTimeInSeconds = (endTime - startTime) / 1000
 
 		console.log(`Function took ${elapsedTimeInSeconds} seconds to finish.`)
-
-		
 	} catch (error) {
 		console.log('Error in createShortScript: ', error)
 	}
 }
 
-generateQuoraShort(
-	'en-IN',
-	`Why do software developers age over 40 leave the industry?`,
-	`
-	I’ll give you my reasons, although I left it until my mid-fifties to quit (maybe temporarily) commercial software development.
-
-	Because I can. I don’t maintain an expensive lifestyle and I’ve earned enough to retire early.
-	I have lots of other things that I’m interested in that I’d like to pursue.
-	Company politics increasingly seem to intrude on the job, to the extent that it’s like wading through sludge.
-	Too many managers with little or no experience in the sector, who only seem interested in bringing in a large number of cheap but relatively incompetent staff and cranking out any old rubbish, rather than focusing on quality.
-	Diminishing returns to the point where even solving technical problems is not really fun any more. In the areas that I work in, the rate of technical change has slowed considerably compared to even ten years ago.
-	The new, interesting stuff like ML is such a paradigm shift that you can’t learn it on the job. Hence I’ve retreated back into academia.
-	Note that this is the opposite of some of the assertions that older developers “aren’t very good and can’t keep up”. Granted there’ll be a few people like that, but most of my peers seem to be feeling the same as I do.
-	`,
-	{
-		comment:"1",
-		upvote:"17",
-		share:"1",
-		name:"Martin Ingram"
-	}
-)
-
+generateQuoraShort({
+	language: 'en-IN',
+	Quoralink: 'https://qr.ae/pKeRZp',
+	quoraDetails: {
+		comment: '7',
+		upvote: '839',
+		share: '3',
+	},
+}).then(() => {
+	process.exit(0)
+})
