@@ -204,13 +204,9 @@ const generateQuoraShort = async ({
 		// const queries: any = await getImageQuerys(
 		// 	'/Users/chetan/Developer/code/short-video-automation/basicaudio.wav.vtt'
 		// )
-
 		// if (!queries) throw new Error('Queries not generated')
-
 		// console.log('QUERIES: ', typeof queries)
-
 		// await downloadImages(Object.values(queries))
-
 		// await imageProccessing({
 		// 	language: '',
 		// 	queries: queries,
