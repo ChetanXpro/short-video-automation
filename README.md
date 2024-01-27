@@ -44,3 +44,14 @@ Clone the repository:
 ```bash
 https://github.com/ChetanXpro/short-video-automation.git
 cd short-video-automation
+```
+
+Download and paste a base video which you want to use in project root dir
+You can test with this video: https://drive.google.com/file/d/1ZNN3GX2iR74FxrTM_6adDEnl6BA8gKcc/view?usp=sharing
+
+Then find any interesting quora question and answer and paste its link in tool
+
+Run the tool
+```
+npm run start
+```
