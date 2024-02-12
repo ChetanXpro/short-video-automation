@@ -28,7 +28,7 @@
 		"googleapis": "^126.0.1",
 		"langchain": "0.0.180",
 		"nodejs-whisper": "^0.1.6",
-		"openai": "^3.3.0",
+		"openai": "^4.27.0",
 		"puppeteer": "^21.5.0",
 		"shelljs": "^0.8.5"
 	},
