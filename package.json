@@ -25,7 +25,7 @@
 		"ffprobe-static": "^3.1.0",
 		"fluent-ffmpeg": "^2.1.2",
 		"fs-extra": "^11.1.1",
-		"googleapis": "^126.0.1",
+		"googleapis": "^133.0.0",
 		"langchain": "0.0.180",
 		"nodejs-whisper": "^0.1.6",
 		"openai": "^3.3.0",
